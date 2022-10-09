@@ -1,6 +1,7 @@
 package com.testevr.miniautorizador.controller;
 
 import com.testevr.miniautorizador.exception.NotFoundException;
+import com.testevr.miniautorizador.exception.UnprocessableEntityException;
 import com.testevr.miniautorizador.mapper.BalanceMapper;
 import com.testevr.miniautorizador.mapper.CardMapper;
 import com.testevr.miniautorizador.model.dto.BalanceResponseDTO;
@@ -29,7 +30,7 @@ public class CardController {
     private BalanceMapper balanceMapper;
 
     @PostMapping
-    public ResponseEntity<CardResponseCreateDTO> create(@RequestBody @Valid CardCreateRequestDTO cardCreateRequestDTO) {
+    public ResponseEntity<CardResponseCreateDTO> create(@RequestBody @Valid CardCreateRequestDTO cardCreateRequestDTO) throws UnprocessableEntityException {
         Card card = cardService.create(cardCreateRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(cardMapper.cardToCardResponseCreateDTO(card));
     }

@@ -1,6 +1,7 @@
 package com.testevr.miniautorizador.service.impl;
 
 import com.testevr.miniautorizador.exception.NotFoundException;
+import com.testevr.miniautorizador.exception.UnprocessableEntityException;
 import com.testevr.miniautorizador.mapper.CardMapper;
 import com.testevr.miniautorizador.model.dto.CardCreateRequestDTO;
 import com.testevr.miniautorizador.model.entity.Balance;
@@ -10,8 +11,6 @@ import com.testevr.miniautorizador.service.BalanceService;
 import com.testevr.miniautorizador.service.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class CardServiceImpl implements CardService {
@@ -26,13 +25,18 @@ public class CardServiceImpl implements CardService {
     private CardMapper cardMapper;
 
     @Override
-    public Card create(CardCreateRequestDTO cardCreateRequestDTO) {
-        Card card = cardMapper.cardCreateRequestDTOToCard(cardCreateRequestDTO);
-        Balance balance = Balance.builder()
-                .balance(balanceService.getOpeningBalance())
-                .build();
-        card.setBalance(balance);
-        return cardRepository.save(card);
+    public Card create(CardCreateRequestDTO cardCreateRequestDTO) throws UnprocessableEntityException {
+        try {
+            Card card = findByCardNumber(cardCreateRequestDTO.getCardNumber());
+            throw new UnprocessableEntityException(cardMapper.cardToCardResponseCreateDTO(card));
+        } catch (NotFoundException exception){
+            Card card = cardMapper.cardCreateRequestDTOToCard(cardCreateRequestDTO);
+            Balance balance = Balance.builder()
+                    .balance(balanceService.getOpeningBalance())
+                    .build();
+            card.setBalance(balance);
+            return cardRepository.save(card);
+        }
     }
     @Override
     public Card findByCardNumber(String cardNumber) throws NotFoundException {

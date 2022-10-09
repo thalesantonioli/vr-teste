@@ -1,11 +1,14 @@
 package com.testevr.miniautorizador.exception;
 
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.server.ResponseStatusException;
 
-@ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
-public class UnprocessableEntityException extends Exception {
-    public UnprocessableEntityException(String errorMessage) {
-        super(errorMessage);
+@Getter
+public class UnprocessableEntityException extends ResponseStatusException {
+    private Object body;
+    public UnprocessableEntityException(Object body) {
+        super(HttpStatus.UNPROCESSABLE_ENTITY);
+        this.body = body;
     }
 }
