@@ -2,6 +2,7 @@ package com.testevr.miniautorizador.model.entity;
 
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "tb_cartao")
+@EntityListeners(AuditingEntityListener.class)
 public class Card {
 
     @Id

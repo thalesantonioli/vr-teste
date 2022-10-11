@@ -1,7 +1,6 @@
 package com.testevr.miniautorizador.model.entity;
 
 import lombok.*;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -21,11 +20,14 @@ public class Balance {
     @Column(name = "id_saldo")
     private Long id;
 
-    @UpdateTimestamp
+    @Version
     @Column(name = "data_atualizacao", nullable = false)
     private LocalDateTime updatedDate;
 
     @Column(name = "saldo", nullable = false)
     private BigDecimal balance;
+
+    @OneToOne(mappedBy = "balance")
+    private Card card;
 }
 
